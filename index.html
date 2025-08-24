@@ -21,13 +21,40 @@
       box-sizing: border-box; 
     }
     
+    :root {
+      --bg-primary: #0a0a0a;
+      --bg-secondary: rgba(30,30,30,0.95);
+      --bg-card: rgba(255,255,255,0.05);
+      --text-primary: #fff;
+      --text-secondary: #00e5ff;
+      --accent: linear-gradient(90deg, #ff00cc, #00e5ff);
+      --border-color: #333;
+      --navbar-bg: rgba(255,255,255,0.05);
+      --navbar-scrolled: rgba(0,0,0,0.95);
+      --shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+    
+    body.light-mode {
+      --bg-primary: #f5f5f5;
+      --bg-secondary: rgba(240, 240, 240, 0.95);
+      --bg-card: rgba(0, 0, 0, 0.05);
+      --text-primary: #333;
+      --text-secondary: #007bff;
+      --accent: linear-gradient(90deg, #007bff, #00a8ff);
+      --border-color: #ddd;
+      --navbar-bg: rgba(0,0,0,0.05);
+      --navbar-scrolled: rgba(255,255,255,0.95);
+      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
     body { 
       font-family: 'Helvetica Neue', Arial, sans-serif; 
-      background: #0a0a0a;
-      color: #fff;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       overflow-x: hidden;
       scroll-behavior: smooth;
       line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
     }
     
     a { 
@@ -47,6 +74,12 @@
       filter: blur(3px);
       z-index: -1;
       pointer-events: none;
+      transition: opacity 0.3s, filter 0.3s;
+    }
+    
+    body.light-mode .background-logo {
+      opacity: 1;
+      filter: blur(1px) invert(10%);
     }
 
     /* ----------------- Navbar ----------------- */
@@ -55,19 +88,19 @@
       top: 0;
       width: 100%;
       backdrop-filter: blur(15px);
-      background: rgba(255,255,255,0.05);
-      color: #fff;
+      background: var(--navbar-bg);
+      color: var(--text-primary);
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 10px 30px;
       z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow);
       transition: all 0.3s ease;
     }
     
     header.navbar.scrolled { 
-      background: rgba(0,0,0,0.95); 
+      background: var(--navbar-scrolled); 
     }
     
     .logo-container {
@@ -95,7 +128,7 @@
     }
     
     .navbar nav a:hover {
-      color: #00e5ff;
+      color: var(--text-secondary);
       transform: scale(1.1);
     }
     
@@ -103,7 +136,7 @@
       content: '';
       display: block;
       height: 2px;
-      background: #00ffea;
+      background: var(--text-secondary);
       width: 0;
       position: absolute;
       bottom: -5px;
@@ -120,10 +153,79 @@
       display: none;
       background: none;
       border: none;
-      color: white;
+      color: var(--text-primary);
       font-size: 1.5rem;
       cursor: pointer;
       z-index: 1001;
+    }
+    
+    /* Controles de tema e idioma */
+    .navbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .theme-toggle, .language-toggle {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .theme-toggle:hover, .language-toggle:hover {
+      background: var(--bg-card);
+      transform: scale(1.1);
+    }
+    
+    .language-selector {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .language-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 1000;
+      min-width: 120px;
+    }
+    
+    .language-dropdown.show {
+      display: block;
+    }
+    
+    .language-option {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    
+    .language-option:hover {
+      background: var(--bg-card);
+    }
+    
+    .language-option img {
+      width: 20px;
+      height: 15px;
+      margin-right: 8px;
+      object-fit: cover;
     }
 
     /* Barra de progreso */
@@ -139,7 +241,7 @@
     
     .progress-bar {
       height: 100%;
-      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      background: var(--accent);
       width: 0%;
       transition: width 0.3s ease;
     }
@@ -158,9 +260,13 @@
       overflow: hidden;
     }
     
+    body.light-mode .hero {
+      background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('images/hero-bg.jpg') center/cover no-repeat;
+    }
+    
     .hero h2.title { 
       font-size: 3rem;
-      background: linear-gradient(90deg, #00e5ff, #ff00cc);
+      background: var(--accent);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 20px;
@@ -179,7 +285,7 @@
       font-size: 1.1rem;
       border: none;
       border-radius: 50px;
-      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      background: var(--accent);
       color: white;
       cursor: pointer;
       transition: all 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -207,7 +313,7 @@
       font-size: 2.5rem; 
       margin-bottom: 40px; 
       text-align: center;
-      background: linear-gradient(90deg, #00e5ff, #ff00cc);
+      background: var(--accent);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -227,33 +333,35 @@
       padding: 25px;
       border-radius: 20px;
       backdrop-filter: blur(10px);
-      background: rgba(255,255,255,0.05);
+      background: var(--bg-card);
       transition: all 0.4s ease;
       margin: 0 auto;
       opacity: 0;
       transform: translateY(30px);
+      border: 1px solid var(--border-color);
     }
     
     .card:hover {
       transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 10px 20px rgba(0,255,234,0.3);
-      background: rgba(255,255,255,0.1);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      background: var(--bg-card);
     }
     
     .card h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
-      color: #00e5ff;
+      color: var(--text-secondary);
     }
 
     /* Dashboard / Formulario */
     .dashboard, .contact { 
-      background: rgba(30,30,30,0.95);
+      background: var(--bg-secondary);
       border-radius: 15px;
       padding: 40px;
       margin: 0 auto;
       opacity: 0;
       transform: translateY(30px);
+      border: 1px solid var(--border-color);
     }
     
     .order-form, .contact form {
@@ -273,9 +381,9 @@
       padding: 12px 15px;
       margin-bottom: 20px;
       border-radius: 8px;
-      border: 1px solid #333;
-      background: rgba(255,255,255,0.1);
-      color: white;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-primary);
       font-size: 1rem;
     }
     
@@ -295,7 +403,7 @@
     
     .success {
       background-color: rgba(0, 255, 0, 0.1);
-      color: #00ff00;
+      color: #00aa00;
       display: block;
     }
     
@@ -316,11 +424,12 @@
     .gallery-item {
       overflow: hidden;
       border-radius: 15px;
-      background: rgba(255,255,255,0.05);
+      background: var(--bg-card);
       transition: transform 0.5s ease, box-shadow 0.5s ease;
       opacity: 0;
       transform: translateY(30px);
       height: 250px;
+      border: 1px solid var(--border-color);
     }
     
     .gallery-item img {
@@ -385,13 +494,13 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.3);
+      background: var(--bg-card);
       cursor: pointer;
       transition: all 0.3s ease;
     }
     
     .timelapse-dot.active {
-      background: #00e5ff;
+      background: var(--text-secondary);
       transform: scale(1.2);
     }
     
@@ -456,15 +565,20 @@
       border: none;
       filter: grayscale(30%) invert(90%) contrast(85%);
     }
+    
+    body.light-mode .map-container iframe {
+      filter: grayscale(30%) contrast(90%);
+    }
 
     /* Novedades Redes Sociales */
     .social-news {
-      background: rgba(30,30,30,0.95);
+      background: var(--bg-secondary);
       border-radius: 15px;
       padding: 40px;
       margin: 0 auto;
       opacity: 0;
       transform: translateY(30px);
+      border: 1px solid var(--border-color);
     }
     
     .social-feeds {
@@ -481,7 +595,8 @@
       min-height: 400px;
       border-radius: 15px;
       overflow: hidden;
-      background: rgba(255,255,255,0.05);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
     }
     
     .social-feed iframe {
@@ -500,13 +615,13 @@
     .social-placeholder i {
       font-size: 3rem;
       margin-bottom: 20px;
-      color: #00e5ff;
+      color: var(--text-secondary);
     }
     
     .social-placeholder h3 {
       font-size: 1.5rem;
       margin-bottom: 15px;
-      color: #00e5ff;
+      color: var(--text-secondary);
     }
     
     .social-placeholder p {
@@ -516,7 +631,7 @@
     .social-link {
       display: inline-block;
       padding: 10px 20px;
-      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      background: var(--accent);
       border-radius: 50px;
       color: white;
       transition: all 0.3s ease;
@@ -529,12 +644,13 @@
 
     /* Footer */
     footer {
-      background: rgba(255,255,255,0.05);
+      background: var(--bg-card);
       backdrop-filter: blur(10px);
       text-align: center;
       padding: 50px 20px;
       opacity: 0;
       transform: translateY(30px);
+      border-top: 1px solid var(--border-color);
     }
     
     footer p {
@@ -549,14 +665,14 @@
     .social-icons a {
       margin: 0 12px;
       font-size: 1.8rem;
-      color: #fff;
+      color: var(--text-primary);
       transition: transform 0.3s, color 0.3s;
       display: inline-block;
     }
     
     .social-icons a:hover {
       transform: scale(1.2);
-      color: #00e5ff;
+      color: var(--text-secondary);
     }
 
     /* Animaciones */
@@ -644,6 +760,11 @@
         font-size: 1.1rem;
       }
       
+      .navbar-controls {
+        margin-left: auto;
+        margin-right: 15px;
+      }
+      
       .hero {
         height: 85vh;
       }
@@ -697,6 +818,16 @@
     @media (max-width: 576px) {
       .logo-img {
         height: 35px;
+      }
+      
+      .navbar-controls {
+        gap: 8px;
+      }
+      
+      .theme-toggle, .language-toggle {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
       }
       
       .hero h2.title {
@@ -761,63 +892,85 @@
       <i class="fas fa-bars"></i>
     </button>
     <nav>
-      <a href="#home">Inicio</a>
-      <a href="#services">Servicios</a>
-      <a href="#gallery">Galería</a>
-      <a href="#dashboard">Pedidos</a>
-      <a href="#timelapse">Timelapse</a>
-      <a href="#about">Nosotros</a>
-      <a href="#map">Ubicación</a>
-      <a href="#social">Novedades</a>
-      <a href="#contact">Contacto</a>
+      <a href="#home" data-key="nav.home">Inicio</a>
+      <a href="#services" data-key="nav.services">Servicios</a>
+      <a href="#gallery" data-key="nav.gallery">Galería</a>
+      <a href="#dashboard" data-key="nav.orders">Pedidos</a>
+      <a href="#timelapse" data-key="nav.timelapse">Timelapse</a>
+      <a href="#about" data-key="nav.about">Nosotros</a>
+      <a href="#map" data-key="nav.location">Ubicación</a>
+      <a href="#social" data-key="nav.news">Novedades</a>
+      <a href="#contact" data-key="nav.contact">Contacto</a>
     </nav>
+    
+    <div class="navbar-controls">
+      <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar modo claro/oscuro">
+        <i class="fas fa-moon"></i>
+      </button>
+      
+      <div class="language-selector">
+        <button id="language-toggle" class="language-toggle" aria-label="Cambiar idioma">
+          <i class="fas fa-globe"></i>
+        </button>
+        <div class="language-dropdown" id="language-dropdown">
+          <div class="language-option" data-lang="es">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNDAwIj48cGF0aCBmaWxsPSIjMDAwMGYwIiBkPSJNMCAwaDYwMHY0MDBIMHoiLz48cGF0aCBmaWxsPSIjZjBmMGYwIiBkPSJNMCAxMDBoNjAwdjIwMEgweiIvPjxwYXRoIGZpbGw9IiNmMDAwMDAiIGQ9Ik0wIDE2N2g2MDB2NjdIMHoiLz48L3N2Zz4=" alt="Español">
+            <span data-key="lang.es">Español</span>
+          </div>
+          <div class="language-option" data-lang="en">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MDAgNDAwIj48cGF0aCBmaWxsPSIjMDAxODhhIiBkPSJNMCAwaDYwMHY0MDBIMHoiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTUwIDAgdjQwME0zMDAgMCB2NDAwTTAgMTUwIGg2MDBNMCAzMDAgaDYwMCIvPjxwYXRoIGZpbGw9IiNjNjBhMjMiIGQ9Ik0wIDE4MCBoNjAwTTAgMjIwIGg2MDAiLz48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMzAwIDAgdjQwME0wIDE1MCBoNjAwTTAgMzAwIGg2MDAiLz48cGF0aCBmaWxsPSIjYzZhYTIzIiBkPSJNMzAgMCBoNTBNNTAgMCBoNTBNNTcwIDAgaDUwTTU1MCAwIGg1ME0zMCA0MDAgaDUwTTUwIDQwMCBoNTBNNTcwIDQwMCBoNTBNNTUwIDQwMCBoNTAiLz48L3N2Zz4=" alt="English">
+            <span data-key="lang.en">English</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
 
   <section id="home" class="hero">
-    <h2 class="title">Transformamos ideas en realidad</h2>
-    <p>Impresión 3D · Corte Láser · Bordados personalizados</p>
-    <button class="btn">Haz tu pedido</button>
+    <h2 class="title" data-key="hero.title">Transformamos ideas en realidad</h2>
+    <p data-key="hero.subtitle">Impresión 3D · Corte Láser · Bordados personalizados</p>
+    <button class="btn" data-key="hero.button">Haz tu pedido</button>
   </section>
 
   <section id="services">
-    <h2>Servicios</h2>
+    <h2 data-key="services.title">Servicios</h2>
     <div class="services-container">
       <div class="card">
-        <h3>Impresión 3D</h3>
-        <p>Prototipos, piezas funcionales y más.</p>
+        <h3 data-key="services.3d">Impresión 3D</h3>
+        <p data-key="services.3d_desc">Prototipos, piezas funcionales y más.</p>
       </div>
       <div class="card">
-        <h3>Corte y grabado láser</h3>
-        <p>Personaliza madera, acrílico, cuero y más.</p>
+        <h3 data-key="services.laser">Corte y grabado láser</h3>
+        <p data-key="services.laser_desc">Personaliza madera, acrílico, cuero y más.</p>
       </div>
       <div class="card">
-        <h3>Bordados personalizados</h3>
-        <p>Uniformes, gorras y prendas exclusivas.</p>
+        <h3 data-key="services.embroidery">Bordados personalizados</h3>
+        <p data-key="services.embroidery_desc">Uniformes, gorras y prendas exclusivas.</p>
       </div>
     </div>
   </section>
 
   <section id="dashboard" class="dashboard">
-    <h2>Panel de Pedidos</h2>
-    <p>Llena el siguiente formulario para realizar tu pedido:</p>
+    <h2 data-key="orders.title">Panel de Pedidos</h2>
+    <p data-key="orders.description">Llena el siguiente formulario para realizar tu pedido:</p>
     <form id="order-form" class="order-form">
-      <input type="text" name="name" placeholder="Nombre completo" required>
-      <input type="email" name="email" placeholder="Correo electrónico" required>
-      <input type="text" name="phone" placeholder="Teléfono" required>
+      <input type="text" name="name" placeholder="Nombre completo" data-key="form.name_placeholder" required>
+      <input type="email" name="email" placeholder="Correo electrónico" data-key="form.email_placeholder" required>
+      <input type="text" name="phone" placeholder="Teléfono" data-key="form.phone_placeholder" required>
       <select name="service" required>
-        <option value="">Selecciona un servicio</option>
-        <option value="Impresión 3D">Impresión 3D</option>
-        <option value="Corte y grabado láser">Corte y grabado láser</option>
-        <option value="Bordados personalizados">Bordados personalizados</option>
+        <option value="" data-key="form.select_service">Selecciona un servicio</option>
+        <option value="Impresión 3D" data-key="services.3d">Impresión 3D</option>
+        <option value="Corte y grabado láser" data-key="services.laser">Corte y grabado láser</option>
+        <option value="Bordados personalizados" data-key="services.embroidery">Bordados personalizados</option>
       </select>
-      <textarea name="specifications" placeholder="Especificaciones del pedido" rows="5" required></textarea>
-      <button type="submit" class="btn" id="submit-order">Enviar Pedido</button>
+      <textarea name="specifications" placeholder="Especificaciones del pedido" data-key="form.specs_placeholder" rows="5" required></textarea>
+      <button type="submit" class="btn" id="submit-order" data-key="form.submit">Enviar Pedido</button>
       <div id="form-message" class="form-message"></div>
     </form>
   </section>
 
   <section id="gallery">
-    <h2>Galería</h2>
+    <h2 data-key="gallery.title">Galería</h2>
     <div class="gallery-grid">
       <div class="gallery-item">
         <img src="images/imagen1.jpg" alt="Imagen 1" loading="lazy">
@@ -841,25 +994,25 @@
   </section>
 
   <section id="timelapse" class="timelapse">
-    <h2>Timelapse de Nuestro Trabajo</h2>
+    <h2 data-key="timelapse.title">Timelapse de Nuestro Trabajo</h2>
     <div class="timelapse-container">
       <div class="timelapse-slider" id="timelapseSlider">
         <div class="timelapse-slide">
           <video controls muted loop playsinline>
             <source src="videos/timelapse1.mp4" type="video/mp4">
-            Tu navegador no soporta el video en HTML5.
+            <span data-key="video.unsupported">Tu navegador no soporta el video en HTML5.</span>
           </video>
         </div>
         <div class="timelapse-slide">
           <video controls muted loop playsinline>
             <source src="videos/timelapse2.mp4" type="video/mp4">
-            Tu navegador no soporta el video en HTML5.
+            <span data-key="video.unsupported">Tu navegador no soporta el video en HTML5.</span>
           </video>
         </div>
         <div class="timelapse-slide">
           <video controls muted loop playsinline>
             <source src="videos/timelapse3.mp4" type="video/mp4">
-            Tu navegador no soporta el video en HTML5.
+            <span data-key="video.unsupported">Tu navegador no soporta el video en HTML5.</span>
           </video>
         </div>
       </div>
@@ -874,34 +1027,34 @@
   </section>
 
   <section id="about" class="about">
-    <h2>Nosotros</h2>
-    <p>En IssaTech 3D nos apasiona transformar tus ideas en objetos reales con la más alta tecnología en impresión 3D, corte láser y bordados personalizados. Contamos con años de experiencia y los mejores equipos para garantizar la más alta calidad en cada proyecto.</p>
+    <h2 data-key="about.title">Nosotros</h2>
+    <p data-key="about.description">En IssaTech 3D nos apasiona transformar tus ideas en objetos reales con la más alta tecnología en impresión 3D, corte láser y bordados personalizados. Contamos con años de experiencia y los mejores equipos para garantizar la más alta calidad en cada proyecto.</p>
   </section>
 
   <!-- Nueva sección de Mapa -->
   <section id="map">
-    <h2>Nuestra Ubicación</h2>
+    <h2 data-key="location.title">Nuestra Ubicación</h2>
     <div class="map-container">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3821.196911189549!2d-93.1270153256848!3d16.75395032222755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ecd9aeb3e91b6d%3A0x85c8e1e6c0e9c0b!2sIssaTech%203D!5e0!3m2!1ses!2smx!4v1693256789319!5m2!1ses!2smx" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
     <p style="text-align: center; margin-top: 20px;">
-      📍 Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez, Chiapas, México
+      📍 <span data-key="location.address">Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez, Chiapas, México</span>
     </p>
   </section>
 
   <!-- Nueva sección de Novedades de Redes Sociales -->
   <section id="social" class="social-news">
-    <h2>Novedades en Redes</h2>
-    <p style="text-align: center; margin-bottom: 30px;">Síguenos para estar al día con nuestros últimos trabajos y promociones</p>
+    <h2 data-key="social.title">Novedades en Redes</h2>
+    <p style="text-align: center; margin-bottom: 30px;" data-key="social.description">Síguenos para estar al día con nuestros últimos trabajos y promociones</p>
     
     <div class="social-feeds">
       <div class="social-feed">
         <!-- Placeholder para Instagram - Reemplazar con embed real -->
         <div class="social-placeholder">
           <i class="fab fa-instagram"></i>
-          <h3>Síguenos en Instagram</h3>
-          <p>Mira nuestros últimos proyectos y trabajos personalizados</p>
-          <a href="https://www.instagram.com/issatech3d" target="_blank" class="social-link">Ver Instagram</a>
+          <h3 data-key="social.instagram">Síguenos en Instagram</h3>
+          <p data-key="social.instagram_desc">Mira nuestros últimos proyectos y trabajos personalizados</p>
+          <a href="https://www.instagram.com/issatech3d" target="_blank" class="social-link" data-key="social.view_instagram">Ver Instagram</a>
         </div>
       </div>
       
@@ -909,28 +1062,28 @@
         <!-- Placeholder para Facebook - Reemplazar con embed real -->
         <div class="social-placeholder">
           <i class="fab fa-facebook"></i>
-          <h3>Síguenos en Facebook</h3>
-          <p>Entérate de nuestras promociones y eventos especiales</p>
-          <a href="https://www.facebook.com/profile.php?id=61573471235642" target="_blank" class="social-link">Ver Facebook</a>
+          <h3 data-key="social.facebook">Síguenos en Facebook</h3>
+          <p data-key="social.facebook_desc">Entérate de nuestras promociones y eventos especiales</p>
+          <a href="https://www.facebook.com/profile.php?id=61573471235642" target="_blank" class="social-link" data-key="social.view_facebook">Ver Facebook</a>
         </div>
       </div>
     </div>
   </section>
 
   <section id="contact" class="contact">
-    <h2>Contacto</h2>
+    <h2 data-key="contact.title">Contacto</h2>
     <form action="https://formspree.io/f/xpwlvaej" method="POST">
-      <input type="text" name="name" placeholder="Nombre" required>
-      <input type="email" name="email" placeholder="Correo" required>
-      <textarea name="message" placeholder="Mensaje" rows="5" required></textarea>
-      <button type="submit" class="btn">Enviar</button>
+      <input type="text" name="name" placeholder="Nombre" data-key="form.name_placeholder" required>
+      <input type="email" name="email" placeholder="Correo" data-key="form.email_placeholder" required>
+      <textarea name="message" placeholder="Mensaje" data-key="form.message_placeholder" rows="5" required></textarea>
+      <button type="submit" class="btn" data-key="form.send">Enviar</button>
     </form>
   </section>
 
   <footer>
-    <p>© 2025 IssaTech 3D - Todos los derechos reservados</p>
-    <p>📍 Dirección: Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez., Tuxtla Gutiérrez, Mexico</p>
-    <p>📞 Teléfono: +52 961 695 5006</p>
+    <p>© 2025 IssaTech 3D - <span data-key="footer.rights">Todos los derechos reservados</span></p>
+    <p>📍 <span data-key="location.address">Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez, Chiapas, México</span></p>
+    <p>📞 <span data-key="footer.phone">Teléfono: +52 961 695 5006</span></p>
     <div class="social-icons">
       <a href="https://www.facebook.com/profile.php?id=61573471235642" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
       <a href="https://www.instagram.com/issatech3d" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -1172,6 +1325,191 @@
         navMenu.classList.remove('active');
       }
     });
+
+    // ----------------- Toggle de tema claro/oscuro -----------------
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Comprobar si hay una preferencia guardada
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-mode');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      
+      if (document.body.classList.contains('light-mode')) {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        localStorage.setItem('theme', 'light');
+      } else {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // ----------------- Selector de idioma -----------------
+    const languageToggle = document.getElementById('language-toggle');
+    const languageDropdown = document.getElementById('language-dropdown');
+    
+    languageToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      languageDropdown.classList.toggle('show');
+    });
+    
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', () => {
+      languageDropdown.classList.remove('show');
+    });
+    
+    // Prevenir que se cierre al hacer clic dentro del dropdown
+    languageDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+    
+    // Cambiar idioma
+    const languageOptions = document.querySelectorAll('.language-option');
+    let currentLang = localStorage.getItem('language') || 'es';
+    
+    // Traducciones
+    const translations = {
+      es: {
+        "nav.home": "Inicio",
+        "nav.services": "Servicios",
+        "nav.gallery": "Galería",
+        "nav.orders": "Pedidos",
+        "nav.timelapse": "Timelapse",
+        "nav.about": "Nosotros",
+        "nav.location": "Ubicación",
+        "nav.news": "Novedades",
+        "nav.contact": "Contacto",
+        "hero.title": "Transformamos ideas en realidad",
+        "hero.subtitle": "Impresión 3D · Corte Láser · Bordados personalizados",
+        "hero.button": "Haz tu pedido",
+        "services.title": "Servicios",
+        "services.3d": "Impresión 3D",
+        "services.3d_desc": "Prototipos, piezas funcionales y más.",
+        "services.laser": "Corte y grabado láser",
+        "services.laser_desc": "Personaliza madera, acrílico, cuero y más.",
+        "services.embroidery": "Bordados personalizados",
+        "services.embroidery_desc": "Uniformes, gorras y prendas exclusivas.",
+        "orders.title": "Panel de Pedidos",
+        "orders.description": "Llena el siguiente formulario para realizar tu pedido:",
+        "form.name_placeholder": "Nombre completo",
+        "form.email_placeholder": "Correo electrónico",
+        "form.phone_placeholder": "Teléfono",
+        "form.select_service": "Selecciona un servicio",
+        "form.specs_placeholder": "Especificaciones del pedido",
+        "form.submit": "Enviar Pedido",
+        "form.send": "Enviar",
+        "form.message_placeholder": "Mensaje",
+        "gallery.title": "Galería",
+        "timelapse.title": "Timelapse de Nuestro Trabajo",
+        "video.unsupported": "Tu navegador no soporta el video en HTML5.",
+        "about.title": "Nosotros",
+        "about.description": "En IssaTech 3D nos apasiona transformar tus ideas en objetos reales con la más alta tecnología en impresión 3D, corte láser y bordados personalizados. Contamos con años de experiencia y los mejores equipos para garantizar la más alta calidad en cada proyecto.",
+        "location.title": "Nuestra Ubicación",
+        "location.address": "Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez, Chiapas, México",
+        "social.title": "Novedades en Redes",
+        "social.description": "Síguenos para estar al día con nuestros últimos trabajos y promociones",
+        "social.instagram": "Síguenos en Instagram",
+        "social.instagram_desc": "Mira nuestros últimos proyectos y trabajos personalizados",
+        "social.view_instagram": "Ver Instagram",
+        "social.facebook": "Síguenos en Facebook",
+        "social.facebook_desc": "Entérate de nuestras promociones y eventos especiales",
+        "social.view_facebook": "Ver Facebook",
+        "contact.title": "Contacto",
+        "footer.rights": "Todos los derechos reservados",
+        "footer.phone": "Teléfono: +52 961 695 5006",
+        "lang.es": "Español",
+        "lang.en": "English"
+      },
+      en: {
+        "nav.home": "Home",
+        "nav.services": "Services",
+        "nav.gallery": "Gallery",
+        "nav.orders": "Orders",
+        "nav.timelapse": "Timelapse",
+        "nav.about": "About Us",
+        "nav.location": "Location",
+        "nav.news": "News",
+        "nav.contact": "Contact",
+        "hero.title": "We transform ideas into reality",
+        "hero.subtitle": "3D Printing · Laser Cutting · Custom Embroidery",
+        "hero.button": "Place your order",
+        "services.title": "Services",
+        "services.3d": "3D Printing",
+        "services.3d_desc": "Prototypes, functional parts and more.",
+        "services.laser": "Laser cutting and engraving",
+        "services.laser_desc": "Customize wood, acrylic, leather and more.",
+        "services.embroidery": "Custom embroidery",
+        "services.embroidery_desc": "Uniforms, caps and exclusive garments.",
+        "orders.title": "Order Panel",
+        "orders.description": "Fill out the following form to place your order:",
+        "form.name_placeholder": "Full name",
+        "form.email_placeholder": "Email",
+        "form.phone_placeholder": "Phone",
+        "form.select_service": "Select a service",
+        "form.specs_placeholder": "Order specifications",
+        "form.submit": "Submit Order",
+        "form.send": "Send",
+        "form.message_placeholder": "Message",
+        "gallery.title": "Gallery",
+        "timelapse.title": "Timelapse of Our Work",
+        "video.unsupported": "Your browser does not support HTML5 video.",
+        "about.title": "About Us",
+        "about.description": "At IssaTech 3D we are passionate about transforming your ideas into real objects with the latest technology in 3D printing, laser cutting and custom embroidery. We have years of experience and the best equipment to guarantee the highest quality in every project.",
+        "location.title": "Our Location",
+        "location.address": "Third North East Avenue #234, Terán, Tuxtla Gutiérrez, Chiapas, Mexico",
+        "social.title": "Social Media News",
+        "social.description": "Follow us to stay up to date with our latest work and promotions",
+        "social.instagram": "Follow us on Instagram",
+        "social.instagram_desc": "See our latest projects and custom work",
+        "social.view_instagram": "View Instagram",
+        "social.facebook": "Follow us on Facebook",
+        "social.facebook_desc": "Find out about our promotions and special events",
+        "social.view_facebook": "View Facebook",
+        "contact.title": "Contact",
+        "footer.rights": "All rights reserved",
+        "footer.phone": "Phone: +52 961 695 5006",
+        "lang.es": "Spanish",
+        "lang.en": "English"
+      }
+    };
+    
+    // Aplicar traducciones
+    function applyTranslations(lang) {
+      const elements = document.querySelectorAll('[data-key]');
+      elements.forEach(element => {
+        const key = element.getAttribute('data-key');
+        if (translations[lang] && translations[lang][key]) {
+          if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            element.setAttribute('placeholder', translations[lang][key]);
+          } else if (element.tagName === 'OPTION') {
+            element.textContent = translations[lang][key];
+          } else {
+            element.textContent = translations[lang][key];
+          }
+        }
+      });
+      
+      // Actualizar el idioma actual
+      currentLang = lang;
+      localStorage.setItem('language', lang);
+    }
+    
+    // Cambiar idioma al hacer clic en una opción
+    languageOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const lang = option.getAttribute('data-lang');
+        applyTranslations(lang);
+        languageDropdown.classList.remove('show');
+      });
+    });
+    
+    // Aplicar el idioma guardado al cargar la página
+    applyTranslations(currentLang);
 
     // ----------------- Inicialización -----------------
     document.addEventListener('DOMContentLoaded', () => {
