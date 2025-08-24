@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IssaTech 3D</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Agregar EmailJS SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script type="text/javascript">
+    (function() {
+      // Inicializar EmailJS con tu Public Key
+      emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu Public Key de EmailJS
+    })();
+  </script>
+  <style>
+    /* ----------------- Reset y básico ----------------- */
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    body { 
+      font-family: 'Helvetica Neue', Arial, sans-serif; 
+      background: #0a0a0a;
+      color: #fff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      line-height: 1.6;
+    }
+    
+    a { 
+      text-decoration: none; 
+      color: inherit; 
+    }
+
+    /* ----------------- Background Logo ----------------- */
+    .background-logo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('images/logo.png') center/contain no-repeat;
+      opacity: 0.85;
+      filter: blur(3px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ----------------- Navbar ----------------- */
+    header.navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      backdrop-filter: blur(15px);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      transition: all 0.3s ease;
+    }
+    
+    header.navbar.scrolled { 
+      background: rgba(0,0,0,0.95); 
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-img {
+      height: 50px;
+      width: auto;
+      transition: all 0.3s ease;
+    }
+    
+    .navbar nav {
+      display: flex;
+      justify-content: center;
+      flex: 1;
+    }
+    
+    .navbar nav a {
+      margin: 0 15px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    
+    .navbar nav a:hover {
+      color: #00e5ff;
+      transform: scale(1.1);
+    }
+    
+    .navbar nav a::after {
+      content: '';
+      display: block;
+      height: 2px;
+      background: #00ffea;
+      width: 0;
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      transition: width 0.3s;
+    }
+    
+    .navbar nav a:hover::after,
+    .navbar nav a.active::after {
+      width: 100%;
+    }
+    
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    /* ----------------- Hero ----------------- */
+    .hero {
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 20px;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero-bg.jpg') center/cover no-repeat;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero h2.title { 
+      font-size: 3rem;
+      background: linear-gradient(90deg, #00e5ff, #ff00cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      animation: fadeInDown 1s ease-out forwards;
+    }
+    
+    .hero p { 
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      opacity: 0;
+      animation: fadeInUp 1s ease-out 0.5s forwards;
+    }
+    
+    .btn {
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      color: white;
+      cursor: pointer;
+      transition: all 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+    
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* ----------------- Secciones ----------------- */
+    section { 
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    section h2 { 
+      font-size: 2.5rem; 
+      margin-bottom: 40px; 
+      text-align: center;
+      background: linear-gradient(90deg, #00e5ff, #ff00cc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Servicios */
+    .services-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 25px;
+      padding: 20px 0;
+    }
+    
+    .card {
+      flex: 1 1 300px;
+      max-width: 350px;
+      padding: 25px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.05);
+      transition: all 0.4s ease;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(0,255,234,0.3);
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #00e5ff;
+    }
+
+    /* Dashboard / Formulario */
+    .dashboard, .contact { 
+      background: rgba(30,30,30,0.95);
+      border-radius: 15px;
+      padding: 40px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .order-form, .contact form {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    
+    .order-form input, 
+    .order-form textarea, 
+    .order-form select,
+    .contact form input, 
+    .contact form textarea {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 1rem;
+    }
+    
+    .order-form button, 
+    .contact form button {
+      align-self: center;
+      margin-top: 15px;
+    }
+    
+    .form-message {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(0, 255, 0, 0.1);
+      color: #00ff00;
+      display: block;
+    }
+    
+    .error {
+      background-color: rgba(255, 0, 0, 0.1);
+      color: #ff0000;
+      display: block;
+    }
+
+    /* Galería */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+    
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 15px;
+      background: rgba(255,255,255,0.05);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      opacity: 0;
+      transform: translateY(30px);
+      height: 250px;
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.5s ease;
+      filter: brightness(0.9);
+    }
+    
+    .gallery-item:hover {
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    
+    .gallery-item:hover img {
+      transform: scale(1.05);
+      filter: brightness(1);
+    }
+
+    /* About */
+    .about {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .about p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* Mapa */
+    .map-container {
+      height: 400px;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      filter: grayscale(30%) invert(90%) contrast(85%);
+    }
+
+    /* Novedades Redes Sociales */
+    .social-news {
+      background: rgba(30,30,30,0.95);
+      border-radius: 15px;
+      padding: 40px;
+      margin: 0 auto;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .social-feeds {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 30px;
+    }
+    
+    .social-feed {
+      flex: 1 1 300px;
+      max-width: 500px;
+      min-height: 400px;
+      border-radius: 15px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .social-feed iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 400px;
+      border: none;
+      border-radius: 15px;
+    }
+    
+    .social-placeholder {
+      padding: 20px;
+      text-align: center;
+    }
+    
+    .social-placeholder i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #00e5ff;
+    }
+    
+    .social-placeholder h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #00e5ff;
+    }
+    
+    .social-placeholder p {
+      margin-bottom: 20px;
+    }
+    
+    .social-link {
+      display: inline-block;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      border-radius: 50px;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .social-link:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      padding: 50px 20px;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    footer p {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+    
+    .social-icons { 
+      margin-top: 25px;
+    }
+    
+    .social-icons a {
+      margin: 0 12px;
+      font-size: 1.8rem;
+      color: #fff;
+      transition: transform 0.3s, color 0.3s;
+      display: inline-block;
+    }
+    
+    .social-icons a:hover {
+      transform: scale(1.2);
+      color: #00e5ff;
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInDown {
+      from { 
+        opacity: 0; 
+        transform: translateY(-50px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0; 
+        transform: translateY(50px);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0);
+      }
+    }
+
+    /* ----------------- Responsive ----------------- */
+    @media (max-width: 992px) {
+      .hero h2.title {
+        font-size: 2.5rem;
+      }
+      
+      section {
+        padding: 70px 20px;
+      }
+      
+      .logo-img {
+        height: 45px;
+      }
+      
+      .social-feeds {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .social-feed {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 10px 20px;
+        flex-wrap: wrap;
+      }
+      
+      .logo-img {
+        height: 40px;
+      }
+      
+      .nav-toggle {
+        display: block;
+      }
+      
+      .navbar nav {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 15px;
+      }
+      
+      .navbar nav.active {
+        display: flex;
+      }
+      
+      .navbar nav a {
+        margin: 10px 0;
+        font-size: 1.1rem;
+      }
+      
+      .hero {
+        height: 85vh;
+      }
+      
+      .hero h2.title {
+        font-size: 2.2rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
+      section {
+        padding: 60px 15px;
+      }
+      
+      section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+      }
+      
+      .card {
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+      }
+      
+      .dashboard, .contact, .social-news {
+        padding: 30px 20px;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+      }
+      
+      .gallery-item {
+        height: 200px;
+      }
+      
+      .map-container {
+        height: 300px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .logo-img {
+        height: 35px;
+      }
+      
+      .hero h2.title {
+        font-size: 1.8rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        padding: 10px 22px;
+        font-size: 1rem;
+      }
+      
+      section h2 {
+        font-size: 1.9rem;
+      }
+      
+      .card h3 {
+        font-size: 1.3rem;
+      }
+      
+      footer p {
+        font-size: 0.95rem;
+      }
+      
+      .social-icons a {
+        font-size: 1.5rem;
+        margin: 0 8px;
+      }
+      
+      .map-container {
+        height: 250px;
+      }
+      
+      .social-feed {
+        min-height: 350px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background-logo"></div>
+
+  <header class="navbar">
+    <div class="logo-container">
+      <img src="images/1logo.png" alt="IssaTech 3D Logo" class="logo-img">
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú">
+      <i class="fas fa-bars"></i>
+    </button>
+    <nav>
+      <a href="#home">Inicio</a>
+      <a href="#services">Servicios</a>
+      <a href="#gallery">Galería</a>
+      <a href="#dashboard">Pedidos</a>
+      <a href="#about">Nosotros</a>
+      <a href="#map">Ubicación</a>
+      <a href="#social">Novedades</a>
+      <a href="#contact">Contacto</a>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <h2 class="title">Transformamos ideas en realidad</h2>
+    <p>Impresión 3D · Corte Láser · Bordados personalizados</p>
+    <button class="btn">Haz tu pedido</button>
+  </section>
+
+  <section id="services">
+    <h2>Servicios</h2>
+    <div class="services-container">
+      <div class="card">
+        <h3>Impresión 3D</h3>
+        <p>Prototipos, piezas funcionales y más.</p>
+      </div>
+      <div class="card">
+        <h3>Corte y grabado láser</h3>
+        <p>Personaliza madera, acrílico, cuero y más.</p>
+      </div>
+      <div class="card">
+        <h3>Bordados personalizados</h3>
+        <p>Uniformes, gorras y prendas exclusivas.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard" class="dashboard">
+    <h2>Panel de Pedidos</h2>
+    <p>Llena el siguiente formulario para realizar tu pedido:</p>
+    <form id="order-form" class="order-form">
+      <input type="text" name="name" placeholder="Nombre completo" required>
+      <input type="email" name="email" placeholder="Correo electrónico" required>
+      <input type="text" name="phone" placeholder="Teléfono" required>
+      <select name="service" required>
+        <option value="">Selecciona un servicio</option>
+        <option value="Impresión 3D">Impresión 3D</option>
+        <option value="Corte y grabado láser">Corte y grabado láser</option>
+        <option value="Bordados personalizados">Bordados personalizados</option>
+      </select>
+      <textarea name="specifications" placeholder="Especificaciones del pedido" rows="5" required></textarea>
+      <button type="submit" class="btn" id="submit-order">Enviar Pedido</button>
+      <div id="form-message" class="form-message"></div>
+    </form>
+  </section>
+
+  <section id="gallery">
+    <h2>Galería</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="images/imagen1.jpg" alt="Imagen 1" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="images/imagen2.jpg" alt="Imagen 2" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="images/imagen3.jpg" alt="Imagen 3" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="images/imagen4.jpg" alt="Imagen 4" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="images/imagen5.jpg" alt="Imagen 5" loading="lazy">
+      </div>
+      <div class="gallery-item">
+        <img src="images/imagen6.jpg" alt="Imagen 6" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about">
+    <h2>Nosotros</h2>
+    <p>En IssaTech 3D nos apasiona transformar tus ideas en objetos reales con la más alta tecnología en impresión 3D, corte láser y bordados personalizados. Contamos con años de experiencia y los mejores equipos para garantizar la más alta calidad en cada proyecto.</p>
+  </section>
+
+  <!-- Nueva sección de Mapa -->
+  <section id="map">
+    <h2>Nuestra Ubicación</h2>
+    <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3821.196911189549!2d-93.1270153256848!3d16.75395032222755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85ecd9aeb3e91b6d%3A0x85c8e1e6c0e9c0b!2sIssaTech%203D!5e0!3m2!1ses!2smx!4v1693256789319!5m2!1ses!2smx" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <p style="text-align: center; margin-top: 20px;">
+      📍 Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez, Chiapas, México
+    </p>
+  </section>
+
+  <!-- Nueva sección de Novedades de Redes Sociales -->
+  <section id="social" class="social-news">
+    <h2>Novedades en Redes</h2>
+    <p style="text-align: center; margin-bottom: 30px;">Síguenos para estar al día con nuestros últimos trabajos y promociones</p>
+    
+    <div class="social-feeds">
+      <div class="social-feed">
+        <!-- Placeholder para Instagram - Reemplazar con embed real -->
+        <div class="social-placeholder">
+          <i class="fab fa-instagram"></i>
+          <h3>Síguenos en Instagram</h3>
+          <p>Mira nuestros últimos proyectos y trabajos personalizados</p>
+          <a href="https://www.instagram.com/issatech3d" target="_blank" class="social-link">Ver Instagram</a>
+        </div>
+      </div>
+      
+      <div class="social-feed">
+        <!-- Placeholder para Facebook - Reemplazar con embed real -->
+        <div class="social-placeholder">
+          <i class="fab fa-facebook"></i>
+          <h3>Síguenos en Facebook</h3>
+          <p>Entérate de nuestras promociones y eventos especiales</p>
+          <a href="https://www.facebook.com/profile.php?id=61573471235642" target="_blank" class="social-link">Ver Facebook</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>Contacto</h2>
+    <form action="https://formspree.io/f/xpwlvaej" method="POST">
+      <input type="text" name="name" placeholder="Nombre" required>
+      <input type="email" name="email" placeholder="Correo" required>
+      <textarea name="message" placeholder="Mensaje" rows="5" required></textarea>
+      <button type="submit" class="btn">Enviar</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>© 2025 IssaTech 3D - Todos los derechos reservados</p>
+    <p>📍 Dirección: Tercera Avenida Nte. Ote. #234, Terán, Tuxtla Gutiérrez., Tuxtla Gutiérrez, Mexico</p>
+    <p>📞 Teléfono: +52 961 695 5006</p>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/profile.php?id=61573471235642" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/issatech3d" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://wa.me/529616955006" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    // ----------------- Menu móvil -----------------
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.navbar nav');
+    
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+
+    // ----------------- Intersection Observer para animaciones -----------------
+    const faders = document.querySelectorAll('.card, .dashboard, .gallery-item, .about, .contact, footer, .map-container, .social-news');
+    const appearOptions = { 
+      threshold: 0.15,
+      rootMargin: "0px 0px -100px 0px"
+    };
+    
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        
+        entry.target.style.opacity = 1;
+        entry.target.style.transform = "translateY(0)";
+        observer.unobserve(entry.target);
+      });
+    }, appearOptions);
+    
+    faders.forEach(fader => {
+      fader.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
+      appearOnScroll.observe(fader);
+    });
+
+    // ----------------- Scroll suave -----------------
+    function smoothScroll(target, duration = 800) {
+      const targetSection = document.getElementById(target);
+      if (!targetSection) return;
+      
+      const startPosition = window.pageYOffset;
+      const targetPosition = targetSection.offsetTop - 70;
+      const distance = targetPosition - startPosition;
+      let startTime = null;
+      
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      }
+      
+    function ease(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
+      t--;
+      return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+    
+    requestAnimationFrame(animation);
+  }
+
+  // ----------------- Navbar enlaces -----------------
+  const navLinks = document.querySelectorAll('.navbar nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      navMenu.classList.remove('active');
+      const targetId = this.getAttribute('href').substring(1);
+      smoothScroll(targetId, 1000);
+    });
+  });
+
+  // ----------------- Botón Hero -----------------
+    const orderBtn = document.querySelector('.hero .btn');
+    orderBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      smoothScroll('dashboard', 1000);
+    });
+
+    // ----------------- Navbar activo y scroll efecto -----------------
+    const navbar = document.querySelector('.navbar');
+    
+    window.addEventListener('scroll', () => {
+      // Efecto de navbar al hacer scroll
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+      
+      // Resaltar enlace activo
+      navLinks.forEach(link => {
+        const section = document.getElementById(link.getAttribute('href').substring(1));
+        if (section) {
+          const top = section.offsetTop - 100;
+          const bottom = top + section.offsetHeight;
+          
+          if (window.scrollY >= top && window.scrollY < bottom) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        }
+      });
+    });
+
+    // ----------------- Envío de formulario de pedidos a correo -----------------
+    const orderForm = document.getElementById('order-form');
+    const submitButton = document.getElementById('submit-order');
+    const formMessage = document.getElementById('form-message');
+    
+    orderForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Deshabilitar botón para evitar múltiples envíos
+      submitButton.disabled = true;
+      submitButton.textContent = 'Enviando...';
+      
+      // Obtener datos del formulario
+      const formData = {
+        name: orderForm.name.value,
+        email: orderForm.email.value,
+        phone: orderForm.phone.value,
+        service: orderForm.service.value,
+        specifications: orderForm.specifications.value,
+        date: new Date().toLocaleString('es-MX')
+      };
+      
+      // Enviar correo usando EmailJS
+      emailjs.send('service_6kom8gf', 'template_w7ye4ao', formData) // Reemplaza con tus IDs de EmailJS
+        .then(function(response) {
+          console.log('SUCCESS!', response.status, response.text);
+          formMessage.textContent = '¡Pedido enviado con éxito! Nos pondremos en contacto contigo pronto.';
+          formMessage.className = 'form-message success';
+          orderForm.reset();
+        }, function(error) {
+          console.log('FAILED...', error);
+          formMessage.textContent = 'Error al enviar el pedido. Por favor, intenta nuevamente.';
+          formMessage.className = 'form-message error';
+        })
+        .finally(function() {
+          submitButton.disabled = false;
+          submitButton.textContent = 'Enviar Pedido';
+          
+          // Ocultar mensaje después de 5 segundos
+          setTimeout(() => {
+            formMessage.className = 'form-message';
+            formMessage.textContent = '';
+          }, 5000);
+        });
+    });
+
+    // ----------------- Feedback formulario de contacto -----------------
+    const contactForm = document.querySelector('.contact form');
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('¡Formulario enviado con éxito! Nos pondremos en contacto contigo pronto.');
+      contactForm.reset();
+    });
+
+    // ----------------- Cerrar menú al hacer clic fuera -----------------
+    document.addEventListener('click', (e) => {
+      if (navMenu.classList.contains('active') && 
+          !e.target.closest('.navbar nav') && 
+          !e.target.closest('.nav-toggle')) {
+        navMenu.classList.remove('active');
+      }
+    });
+
+    // ----------------- Inicialización -----------------
+    document.addEventListener('DOMContentLoaded', () => {
+      // Activar la primera sección al cargar
+      const homeSection = document.getElementById('home');
+      if (homeSection) {
+        const homeLink = document.querySelector('.navbar nav a[href="#home"]');
+        if (homeLink) homeLink.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>
