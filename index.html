@@ -126,6 +126,24 @@
       z-index: 1001;
     }
 
+    /* Barra de progreso */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: transparent;
+      z-index: 1001;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #ff00cc, #00e5ff);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
     /* ----------------- Hero ----------------- */
     .hero {
       height: 90vh;
@@ -320,6 +338,91 @@
     .gallery-item:hover img {
       transform: scale(1.05);
       filter: brightness(1);
+    }
+
+    /* Timelapse Section */
+    .timelapse {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .timelapse-container {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .timelapse-slider {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+    
+    .timelapse-slide {
+      min-width: 100%;
+      position: relative;
+    }
+    
+    .timelapse-slide video {
+      width: 100%;
+      height: auto;
+      max-height: 450px;
+      border-radius: 15px;
+      background: #000;
+    }
+    
+    .timelapse-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 10px;
+    }
+    
+    .timelapse-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .timelapse-dot.active {
+      background: #00e5ff;
+      transform: scale(1.2);
+    }
+    
+    .timelapse-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+    
+    .timelapse-nav:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    
+    .timelapse-prev {
+      left: 15px;
+    }
+    
+    .timelapse-next {
+      right: 15px;
     }
 
     /* About */
@@ -584,6 +687,11 @@
       .map-container {
         height: 300px;
       }
+      
+      .timelapse-nav {
+        width: 35px;
+        height: 35px;
+      }
     }
 
     @media (max-width: 576px) {
@@ -628,11 +736,22 @@
       .social-feed {
         min-height: 350px;
       }
+      
+      .timelapse-nav {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
   <div class="background-logo"></div>
+
+  <!-- Barra de progreso -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 
   <header class="navbar">
     <div class="logo-container">
@@ -646,6 +765,7 @@
       <a href="#services">Servicios</a>
       <a href="#gallery">Galería</a>
       <a href="#dashboard">Pedidos</a>
+      <a href="#timelapse">Timelapse</a>
       <a href="#about">Nosotros</a>
       <a href="#map">Ubicación</a>
       <a href="#social">Novedades</a>
@@ -718,6 +838,39 @@
         <img src="images/imagen6.jpg" alt="Imagen 6" loading="lazy">
       </div>
     </div>
+  </section>
+
+  <section id="timelapse" class="timelapse">
+    <h2>Timelapse de Nuestro Trabajo</h2>
+    <div class="timelapse-container">
+      <div class="timelapse-slider" id="timelapseSlider">
+        <div class="timelapse-slide">
+          <video controls muted loop playsinline>
+            <source src="videos/timelapse1.mp4" type="video/mp4">
+            Tu navegador no soporta el video en HTML5.
+          </video>
+        </div>
+        <div class="timelapse-slide">
+          <video controls muted loop playsinline>
+            <source src="videos/timelapse2.mp4" type="video/mp4">
+            Tu navegador no soporta el video en HTML5.
+          </video>
+        </div>
+        <div class="timelapse-slide">
+          <video controls muted loop playsinline>
+            <source src="videos/timelapse3.mp4" type="video/mp4">
+            Tu navegador no soporta el video en HTML5.
+          </video>
+        </div>
+      </div>
+      <button class="timelapse-nav timelapse-prev" id="timelapsePrev">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="timelapse-nav timelapse-next" id="timelapseNext">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+    <div class="timelapse-controls" id="timelapseDots"></div>
   </section>
 
   <section id="about" class="about">
@@ -794,8 +947,18 @@
       navMenu.classList.toggle('active');
     });
 
+    // ----------------- Barra de progreso -----------------
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById("progressBar").style.width = scrolled + "%";
+    }
+    
+    window.addEventListener('scroll', updateProgressBar);
+
     // ----------------- Intersection Observer para animaciones -----------------
-    const faders = document.querySelectorAll('.card, .dashboard, .gallery-item, .about, .contact, footer, .map-container, .social-news');
+    const faders = document.querySelectorAll('.card, .dashboard, .gallery-item, .about, .contact, footer, .map-container, .social-news, .timelapse');
     const appearOptions = { 
       threshold: 0.15,
       rootMargin: "0px 0px -100px 0px"
@@ -815,6 +978,64 @@
       fader.style.transition = "opacity 0.6s ease-out, transform 0.6s ease-out";
       appearOnScroll.observe(fader);
     });
+
+    // ----------------- Carrusel de Timelapse -----------------
+    const timelapseSlider = document.getElementById('timelapseSlider');
+    const timelapseSlides = document.querySelectorAll('.timelapse-slide');
+    const timelapsePrev = document.getElementById('timelapsePrev');
+    const timelapseNext = document.getElementById('timelapseNext');
+    const timelapseDots = document.getElementById('timelapseDots');
+    
+    let currentSlide = 0;
+    const slideCount = timelapseSlides.length;
+    
+    // Crear dots de navegación
+    for (let i = 0; i < slideCount; i++) {
+      const dot = document.createElement('div');
+      dot.classList.add('timelapse-dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i));
+      timelapseDots.appendChild(dot);
+    }
+    
+    function goToSlide(n) {
+      currentSlide = n;
+      if (currentSlide < 0) currentSlide = slideCount - 1;
+      if (currentSlide >= slideCount) currentSlide = 0;
+      
+      timelapseSlider.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      // Actualizar dots
+      document.querySelectorAll('.timelapse-dot').forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+    
+    timelapsePrev.addEventListener('click', () => goToSlide(currentSlide - 1));
+    timelapseNext.addEventListener('click', () => goToSlide(currentSlide + 1));
+    
+    // Navegación táctil
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    timelapseSlider.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    timelapseSlider.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+      if (touchEndX < touchStartX) goToSlide(currentSlide + 1); // Deslizar izquierda
+      if (touchEndX > touchStartX) goToSlide(currentSlide - 1); // Deslizar derecha
+    }
+    
+    // Cambio automático cada 10 segundos
+    setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 10000);
 
     // ----------------- Scroll suave -----------------
     function smoothScroll(target, duration = 800) {
@@ -960,6 +1181,9 @@
         const homeLink = document.querySelector('.navbar nav a[href="#home"]');
         if (homeLink) homeLink.classList.add('active');
       }
+      
+      // Inicializar barra de progreso
+      updateProgressBar();
     });
   </script>
 </body>
