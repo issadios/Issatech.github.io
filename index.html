@@ -5,16 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IssaTech 3D</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Agregar EmailJS SDK -->
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function() {
-      // Inicializar EmailJS con tu Public Key
-      emailjs.init("YOUR_PUBLIC_KEY"); // Reemplaza con tu Public Key de EmailJS
+      emailjs.init("YOUR_PUBLIC_KEY");
     })();
   </script>
   <style>
-    /* ----------------- Reset y básico ----------------- */
     * { 
       margin: 0; 
       padding: 0; 
@@ -22,29 +19,31 @@
     }
     
     :root {
+      --bg-primary: #f5f5f7;
+      --bg-secondary: rgba(255, 255, 255, 0.95);
+      --bg-card: rgba(255, 255, 255, 0.7);
+      --text-primary: #333;
+      --text-secondary: #0066cc;
+      --accent: linear-gradient(90deg, #0066cc, #0099ff);
+      --border-color: #ddd;
+      --navbar-bg: rgba(255, 255, 255, 0.9);
+      --navbar-scrolled: rgba(255, 255, 255, 0.95);
+      --shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+      --hero-overlay: rgba(255, 255, 255, 0.8);
+    }
+    
+    body.dark-mode {
       --bg-primary: #0a0a0a;
-      --bg-secondary: rgba(30,30,30,0.95);
-      --bg-card: rgba(255,255,255,0.05);
+      --bg-secondary: rgba(30, 30, 30, 0.95);
+      --bg-card: rgba(255, 255, 255, 0.05);
       --text-primary: #fff;
       --text-secondary: #00e5ff;
       --accent: linear-gradient(90deg, #ff00cc, #00e5ff);
       --border-color: #333;
-      --navbar-bg: rgba(255,255,255,0.05);
-      --navbar-scrolled: rgba(0,0,0,0.95);
-      --shadow: 0 2px 8px rgba(0,0,0,0.5);
-    }
-    
-    body.light-mode {
-      --bg-primary: #f5f5f5;
-      --bg-secondary: rgba(240, 240, 240, 0.95);
-      --bg-card: rgba(0, 0, 0, 0.05);
-      --text-primary: #333;
-      --text-secondary: #007bff;
-      --accent: linear-gradient(90deg, #007bff, #00a8ff);
-      --border-color: #ddd;
-      --navbar-bg: rgba(0,0,0,0.05);
-      --navbar-scrolled: rgba(255,255,255,0.95);
-      --shadow: 0 2px 8px rgba(0,0,0,0.1);
+      --navbar-bg: rgba(255, 255, 255, 0.05);
+      --navbar-scrolled: rgba(0, 0, 0, 0.95);
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      --hero-overlay: rgba(0, 0, 0, 0.7);
     }
     
     body { 
@@ -62,7 +61,6 @@
       color: inherit; 
     }
 
-    /* ----------------- Background Logo ----------------- */
     .background-logo {
       position: fixed;
       top: 0;
@@ -71,18 +69,17 @@
       height: 100%;
       background: url('images/logo.png') center/contain no-repeat;
       opacity: 0.85;
-      filter: blur(3px);
+      filter: blur(1px) invert(30%);
       z-index: -1;
       pointer-events: none;
       transition: opacity 0.3s, filter 0.3s;
     }
     
-    body.light-mode .background-logo {
+    body.dark-mode .background-logo {
       opacity: 1;
-      filter: blur(1px) invert(10%);
+      filter: blur(px) invert(0);
     }
 
-    /* ----------------- Navbar ----------------- */
     header.navbar {
       position: sticky;
       top: 0;
@@ -159,7 +156,6 @@
       z-index: 1001;
     }
     
-    /* Controles de tema e idioma */
     .navbar-controls {
       display: flex;
       align-items: center;
@@ -202,6 +198,7 @@
       display: none;
       z-index: 1000;
       min-width: 120px;
+      border: 1px solid var(--border-color);
     }
     
     .language-dropdown.show {
@@ -228,7 +225,6 @@
       object-fit: cover;
     }
 
-    /* Barra de progreso */
     .progress-container {
       position: fixed;
       top: 0;
@@ -246,7 +242,6 @@
       transition: width 0.3s ease;
     }
 
-    /* ----------------- Hero ----------------- */
     .hero {
       height: 90vh;
       display: flex;
@@ -255,13 +250,9 @@
       align-items: center;
       text-align: center;
       padding: 0 20px;
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('images/hero-bg.jpg') center/cover no-repeat;
+      background: linear-gradient(var(--hero-overlay), var(--hero-overlay)), url('images/hero-bg.jpg') center/cover no-repeat;
       position: relative;
       overflow: hidden;
-    }
-    
-    body.light-mode .hero {
-      background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('images/hero-bg.jpg') center/cover no-repeat;
     }
     
     .hero h2.title { 
@@ -289,12 +280,12 @@
       color: white;
       cursor: pointer;
       transition: all 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     
     .btn:hover {
       transform: scale(1.08);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
     }
     
     .btn:disabled {
@@ -302,7 +293,6 @@
       cursor: not-allowed;
     }
 
-    /* ----------------- Secciones ----------------- */
     section { 
       padding: 80px 20px;
       max-width: 1200px;
@@ -318,7 +308,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Servicios */
     .services-container {
       display: flex;
       justify-content: center;
@@ -339,12 +328,12 @@
       opacity: 0;
       transform: translateY(30px);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
     
     .card:hover {
       transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-      background: var(--bg-card);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
     
     .card h3 {
@@ -353,7 +342,6 @@
       color: var(--text-secondary);
     }
 
-    /* Dashboard / Formulario */
     .dashboard, .contact { 
       background: var(--bg-secondary);
       border-radius: 15px;
@@ -362,6 +350,7 @@
       opacity: 0;
       transform: translateY(30px);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
     
     .order-form, .contact form {
@@ -402,18 +391,19 @@
     }
     
     .success {
-      background-color: rgba(0, 255, 0, 0.1);
+      background-color: rgba(0, 200, 0, 0.1);
       color: #00aa00;
       display: block;
+      border: 1px solid rgba(0, 200, 0, 0.2);
     }
     
     .error {
       background-color: rgba(255, 0, 0, 0.1);
       color: #ff0000;
       display: block;
+      border: 1px solid rgba(255, 0, 0, 0.2);
     }
 
-    /* Galería */
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -430,6 +420,7 @@
       transform: translateY(30px);
       height: 250px;
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
     
     .gallery-item img {
@@ -437,19 +428,16 @@
       height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease, filter 0.5s ease;
-      filter: brightness(0.9);
     }
     
     .gallery-item:hover {
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
     
     .gallery-item:hover img {
       transform: scale(1.05);
-      filter: brightness(1);
     }
 
-    /* Timelapse Section */
     .timelapse {
       text-align: center;
       opacity: 0;
@@ -462,7 +450,7 @@
       margin: 0 auto;
       overflow: hidden;
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow);
     }
     
     .timelapse-slider {
@@ -534,7 +522,6 @@
       right: 15px;
     }
 
-    /* About */
     .about {
       text-align: center;
       opacity: 0;
@@ -548,13 +535,12 @@
       line-height: 1.8;
     }
 
-    /* Mapa */
     .map-container {
       height: 400px;
       border-radius: 15px;
       overflow: hidden;
       margin: 0 auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: var(--shadow);
       opacity: 0;
       transform: translateY(30px);
     }
@@ -563,14 +549,13 @@
       width: 100%;
       height: 100%;
       border: none;
-      filter: grayscale(30%) invert(90%) contrast(85%);
-    }
-    
-    body.light-mode .map-container iframe {
       filter: grayscale(30%) contrast(90%);
     }
+    
+    body.dark-mode .map-container iframe {
+      filter: grayscale(30%) invert(90%) contrast(85%);
+    }
 
-    /* Novedades Redes Sociales */
     .social-news {
       background: var(--bg-secondary);
       border-radius: 15px;
@@ -579,6 +564,7 @@
       opacity: 0;
       transform: translateY(30px);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
     
     .social-feeds {
@@ -597,6 +583,7 @@
       overflow: hidden;
       background: var(--bg-card);
       border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
     }
     
     .social-feed iframe {
@@ -639,10 +626,9 @@
     
     .social-link:hover {
       transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
 
-    /* Footer */
     footer {
       background: var(--bg-card);
       backdrop-filter: blur(10px);
@@ -675,7 +661,6 @@
       color: var(--text-secondary);
     }
 
-    /* Animaciones */
     @keyframes fadeIn {
       to {
         opacity: 1;
@@ -705,7 +690,6 @@
       }
     }
 
-    /* ----------------- Responsive ----------------- */
     @media (max-width: 992px) {
       .hero h2.title {
         font-size: 2.5rem;
@@ -879,7 +863,6 @@
 <body>
   <div class="background-logo"></div>
 
-  <!-- Barra de progreso -->
   <div class="progress-container">
     <div class="progress-bar" id="progressBar"></div>
   </div>
@@ -1031,7 +1014,6 @@
     <p data-key="about.description">En IssaTech 3D nos apasiona transformar tus ideas en objetos reales con la más alta tecnología en impresión 3D, corte láser y bordados personalizados. Contamos con años de experiencia y los mejores equipos para garantizar la más alta calidad en cada proyecto.</p>
   </section>
 
-  <!-- Nueva sección de Mapa -->
   <section id="map">
     <h2 data-key="location.title">Nuestra Ubicación</h2>
     <div class="map-container">
@@ -1042,14 +1024,12 @@
     </p>
   </section>
 
-  <!-- Nueva sección de Novedades de Redes Sociales -->
   <section id="social" class="social-news">
     <h2 data-key="social.title">Novedades en Redes</h2>
     <p style="text-align: center; margin-bottom: 30px;" data-key="social.description">Síguenos para estar al día con nuestros últimos trabajos y promociones</p>
     
     <div class="social-feeds">
       <div class="social-feed">
-        <!-- Placeholder para Instagram - Reemplazar con embed real -->
         <div class="social-placeholder">
           <i class="fab fa-instagram"></i>
           <h3 data-key="social.instagram">Síguenos en Instagram</h3>
@@ -1059,7 +1039,6 @@
       </div>
       
       <div class="social-feed">
-        <!-- Placeholder para Facebook - Reemplazar con embed real -->
         <div class="social-placeholder">
           <i class="fab fa-facebook"></i>
           <h3 data-key="social.facebook">Síguenos en Facebook</h3>
@@ -1092,7 +1071,7 @@
   </footer>
 
   <script>
-    // ----------------- Menu móvil -----------------
+    // Menu móvil
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.navbar nav');
     
@@ -1100,7 +1079,7 @@
       navMenu.classList.toggle('active');
     });
 
-    // ----------------- Barra de progreso -----------------
+    // Barra de progreso
     function updateProgressBar() {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -1110,7 +1089,7 @@
     
     window.addEventListener('scroll', updateProgressBar);
 
-    // ----------------- Intersection Observer para animaciones -----------------
+    // Intersection Observer para animaciones
     const faders = document.querySelectorAll('.card, .dashboard, .gallery-item, .about, .contact, footer, .map-container, .social-news, .timelapse');
     const appearOptions = { 
       threshold: 0.15,
@@ -1132,7 +1111,7 @@
       appearOnScroll.observe(fader);
     });
 
-    // ----------------- Carrusel de Timelapse -----------------
+    // Carrusel de Timelapse
     const timelapseSlider = document.getElementById('timelapseSlider');
     const timelapseSlides = document.querySelectorAll('.timelapse-slide');
     const timelapsePrev = document.getElementById('timelapsePrev');
@@ -1142,7 +1121,6 @@
     let currentSlide = 0;
     const slideCount = timelapseSlides.length;
     
-    // Crear dots de navegación
     for (let i = 0; i < slideCount; i++) {
       const dot = document.createElement('div');
       dot.classList.add('timelapse-dot');
@@ -1158,7 +1136,6 @@
       
       timelapseSlider.style.transform = `translateX(-${currentSlide * 100}%)`;
       
-      // Actualizar dots
       document.querySelectorAll('.timelapse-dot').forEach((dot, i) => {
         dot.classList.toggle('active', i === currentSlide);
       });
@@ -1167,7 +1144,6 @@
     timelapsePrev.addEventListener('click', () => goToSlide(currentSlide - 1));
     timelapseNext.addEventListener('click', () => goToSlide(currentSlide + 1));
     
-    // Navegación táctil
     let touchStartX = 0;
     let touchEndX = 0;
     
@@ -1181,16 +1157,15 @@
     }, false);
     
     function handleSwipe() {
-      if (touchEndX < touchStartX) goToSlide(currentSlide + 1); // Deslizar izquierda
-      if (touchEndX > touchStartX) goToSlide(currentSlide - 1); // Deslizar derecha
+      if (touchEndX < touchStartX) goToSlide(currentSlide + 1);
+      if (touchEndX > touchStartX) goToSlide(currentSlide - 1);
     }
     
-    // Cambio automático cada 10 segundos
     setInterval(() => {
       goToSlide(currentSlide + 1);
     }, 10000);
 
-    // ----------------- Scroll suave -----------------
+    // Scroll suave
     function smoothScroll(target, duration = 800) {
       const targetSection = document.getElementById(target);
       if (!targetSection) return;
@@ -1218,7 +1193,7 @@
     requestAnimationFrame(animation);
   }
 
-  // ----------------- Navbar enlaces -----------------
+  // Navbar enlaces
   const navLinks = document.querySelectorAll('.navbar nav a');
   navLinks.forEach(link => {
     link.addEventListener('click', function(e) {
@@ -1229,25 +1204,23 @@
     });
   });
 
-  // ----------------- Botón Hero -----------------
+  // Botón Hero
     const orderBtn = document.querySelector('.hero .btn');
     orderBtn.addEventListener('click', (e) => {
       e.preventDefault();
       smoothScroll('dashboard', 1000);
     });
 
-    // ----------------- Navbar activo y scroll efecto -----------------
+    // Navbar activo y scroll efecto
     const navbar = document.querySelector('.navbar');
     
     window.addEventListener('scroll', () => {
-      // Efecto de navbar al hacer scroll
       if (window.scrollY > 50) {
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
       }
       
-      // Resaltar enlace activo
       navLinks.forEach(link => {
         const section = document.getElementById(link.getAttribute('href').substring(1));
         if (section) {
@@ -1263,7 +1236,7 @@
       });
     });
 
-    // ----------------- Envío de formulario de pedidos a correo -----------------
+    // Envío de formulario de pedidos a correo
     const orderForm = document.getElementById('order-form');
     const submitButton = document.getElementById('submit-order');
     const formMessage = document.getElementById('form-message');
@@ -1271,11 +1244,9 @@
     orderForm.addEventListener('submit', function(e) {
       e.preventDefault();
       
-      // Deshabilitar botón para evitar múltiples envíos
       submitButton.disabled = true;
       submitButton.textContent = 'Enviando...';
       
-      // Obtener datos del formulario
       const formData = {
         name: orderForm.name.value,
         email: orderForm.email.value,
@@ -1285,8 +1256,7 @@
         date: new Date().toLocaleString('es-MX')
       };
       
-      // Enviar correo usando EmailJS
-      emailjs.send('service_6kom8gf', 'template_w7ye4ao', formData) // Reemplaza con tus IDs de EmailJS
+      emailjs.send('service_6kom8gf', 'template_w7ye4ao', formData)
         .then(function(response) {
           console.log('SUCCESS!', response.status, response.text);
           formMessage.textContent = '¡Pedido enviado con éxito! Nos pondremos en contacto contigo pronto.';
@@ -1301,7 +1271,6 @@
           submitButton.disabled = false;
           submitButton.textContent = 'Enviar Pedido';
           
-          // Ocultar mensaje después de 5 segundos
           setTimeout(() => {
             formMessage.className = 'form-message';
             formMessage.textContent = '';
@@ -1309,7 +1278,7 @@
         });
     });
 
-    // ----------------- Feedback formulario de contacto -----------------
+    // Feedback formulario de contacto
     const contactForm = document.querySelector('.contact form');
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -1317,7 +1286,7 @@
       contactForm.reset();
     });
 
-    // ----------------- Cerrar menú al hacer clic fuera -----------------
+    // Cerrar menú al hacer clic fuera
     document.addEventListener('click', (e) => {
       if (navMenu.classList.contains('active') && 
           !e.target.closest('.navbar nav') && 
@@ -1326,30 +1295,31 @@
       }
     });
 
-    // ----------------- Toggle de tema claro/oscuro -----------------
+    // Toggle de tema claro/oscuro
     const themeToggle = document.getElementById('theme-toggle');
     const themeIcon = themeToggle.querySelector('i');
     
-    // Comprobar si hay una preferencia guardada
+    // Por defecto, el tema claro está activo (no se añade la clase dark-mode)
+    // Comprobamos si hay una preferencia guardada
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light-mode');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
       themeIcon.classList.replace('fa-moon', 'fa-sun');
     }
     
     themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light-mode');
+      document.body.classList.toggle('dark-mode');
       
-      if (document.body.classList.contains('light-mode')) {
+      if (document.body.classList.contains('dark-mode')) {
         themeIcon.classList.replace('fa-moon', 'fa-sun');
-        localStorage.setItem('theme', 'light');
+        localStorage.setItem('theme', 'dark');
       } else {
         themeIcon.classList.replace('fa-sun', 'fa-moon');
-        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('theme', 'light');
       }
     });
 
-    // ----------------- Selector de idioma -----------------
+    // Selector de idioma
     const languageToggle = document.getElementById('language-toggle');
     const languageDropdown = document.getElementById('language-dropdown');
     
@@ -1358,21 +1328,17 @@
       languageDropdown.classList.toggle('show');
     });
     
-    // Cerrar dropdown al hacer clic fuera
     document.addEventListener('click', () => {
       languageDropdown.classList.remove('show');
     });
     
-    // Prevenir que se cierre al hacer clic dentro del dropdown
     languageDropdown.addEventListener('click', (e) => {
       e.stopPropagation();
     });
     
-    // Cambiar idioma
     const languageOptions = document.querySelectorAll('.language-option');
     let currentLang = localStorage.getItem('language') || 'es';
     
-    // Traducciones
     const translations = {
       es: {
         "nav.home": "Inicio",
@@ -1478,7 +1444,6 @@
       }
     };
     
-    // Aplicar traducciones
     function applyTranslations(lang) {
       const elements = document.querySelectorAll('[data-key]');
       elements.forEach(element => {
@@ -1494,12 +1459,10 @@
         }
       });
       
-      // Actualizar el idioma actual
       currentLang = lang;
       localStorage.setItem('language', lang);
     }
     
-    // Cambiar idioma al hacer clic en una opción
     languageOptions.forEach(option => {
       option.addEventListener('click', () => {
         const lang = option.getAttribute('data-lang');
@@ -1508,19 +1471,16 @@
       });
     });
     
-    // Aplicar el idioma guardado al cargar la página
     applyTranslations(currentLang);
 
-    // ----------------- Inicialización -----------------
+    // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
-      // Activar la primera sección al cargar
       const homeSection = document.getElementById('home');
       if (homeSection) {
         const homeLink = document.querySelector('.navbar nav a[href="#home"]');
         if (homeLink) homeLink.classList.add('active');
       }
       
-      // Inicializar barra de progreso
       updateProgressBar();
     });
   </script>
